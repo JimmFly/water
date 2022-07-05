@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const Clock = () => {
-  var Flipper = /** @class */ (function () {
+  const Flipper = /** @class */ (function () {
     function Flipper(node, currentTime, nextTime) {
       this.isFlipping = false;
       this.duration = 600;
@@ -18,7 +18,7 @@ const Clock = () => {
       this.backNode.dataset.number = time;
     };
     Flipper.prototype.flipDown = function (currentTime, nextTime) {
-      var _this = this;
+      const _this = this;
       if (this.isFlipping) {
         return false;
       }
@@ -35,28 +35,29 @@ const Clock = () => {
     return Flipper;
   })();
 
-  var getTimeFromDate = function (date) {
+  const getTimeFromDate = function (date) {
     return date.toTimeString().slice(0, 8).split(":").join("");
   };
 
-  var flips = document.querySelectorAll(".flip");
-  var now = new Date();
-  var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
-  var nextTimeStr = getTimeFromDate(now);
-  var flippers = Array.from(flips).map(function (flip, i) {
+  const flips = document.querySelectorAll(".flip");
+  const now = new Date();
+  const nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
+  const nextTimeStr = getTimeFromDate(now);
+  const flippers = Array.from(flips).map(function (flip, i) {
     return new Flipper(flip, nowTimeStr[i], nextTimeStr[i]);
   });
   setInterval(function () {
-    var now = new Date();
-    var nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
-    var nextTimeStr = getTimeFromDate(now);
-    for (var i = 0; i < flippers.length; i++) {
+    const now = new Date();
+    const nowTimeStr = getTimeFromDate(new Date(now.getTime() - 1000));
+    const nextTimeStr = getTimeFromDate(now);
+    for (let i = 0; i < flippers.length; i++) {
       if (nowTimeStr[i] === nextTimeStr[i]) {
         continue;
       }
       flippers[i].flipDown(nowTimeStr[i], nextTimeStr[i]);
     }
   }, 1000);
+
   return (
     <div className="Clock">
       <div className="clock">
