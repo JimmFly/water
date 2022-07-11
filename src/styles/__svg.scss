@@ -1,0 +1,94 @@
+.factory {
+  display: flex;
+  justify-content: center;
+  height: 60vh;
+}
+
+#boards {
+  animation: 1.5s linear swing alternate infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+#string {
+  animation: 1.5s linear swing2 alternate infinite;
+  transform-box: fill-box;
+  transform-origin: 0 10px;
+}
+#truck {
+  animation: 0.8s linear bounce alternate infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.smoke {
+  animation: 8s linear smoke infinite;
+  transform-box: fill-box;
+  transform-origin: 40% bottom;
+}
+.smoke2 {
+  animation: 12s linear 2s smoke infinite;
+}
+.cloud {
+  animation: 40s linear cloud infinite;
+}
+#building-smoke {
+  animation: 2s linear 1s building alternate infinite;
+}
+
+@keyframes swing {
+  from {
+    transform: rotate(-10deg) translateX(9px);
+  }
+  to {
+    transform: rotate(10deg) translateX(-9px);
+  }
+}
+
+@keyframes swing2 {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+@keyframes smoke {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(0.7) translateY(-10px);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(2) translateY(-100px);
+    opacity: 0;
+  }
+}
+@keyframes building {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+@keyframes cloud {
+  from {
+    transform: translateX(-400px);
+  }
+  to {
+    transform: translateX(800px);
+  }
+}
