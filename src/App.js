@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Clock from "./pages/Clock";
 import Cards from "./pages/Cards";
 import TrySvg from "./pages/TrySvg";
+import Circle from "./pages/Circle";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Home />
       <Cards />
       <TrySvg />
+      <Circle />
     </div>
   );
 }
