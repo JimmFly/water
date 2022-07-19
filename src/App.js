@@ -6,6 +6,7 @@ import TrySvg from "./pages/TrySvg";
 import Circle from "./pages/Circle";
 import Canvas from "./pages/Canvas";
 import Backga from "./pages/backga";
+import Try from "./pages/try";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Circle />
       <Canvas />
       <Backga />
+      <Try />
     </div>
   );
 }

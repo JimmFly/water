@@ -1,44 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fullCup, emptyCup, reset } from "../store/cupReducer";
+import {
+  setPercent,
+  decrementPercent,
+  resetPercent,
+} from "../store/percentReducer";
 
 const Home = () => {
-  const data = Array.from({ length: 8 }, (_, i) => ({
-    id: i + 1,
-    isFull: false,
-  }));
-  const [list, setList] = useState(data);
-  const [capacity, setCapacity] = useState(0);
+  const cup = useSelector((state) => state.cup);
+  const capacity = useSelector((state) => state.capacity.value);
+  const dispatch = useDispatch();
 
-  // 点击小水杯加水
-  const fullCup = (e) => {
-    setList(() => {
-      let newList = [...list];
-      for (let i = 0; i < e; i++) {
-        newList[i].isFull = true;
-      }
-      return newList;
-    });
-    setCapacity(e);
-  };
-  // 点击满杯倒水
-  const emptyCup = (e) => {
-    setList(() => {
-      let newList = [...list];
-      for (let i = 7; i > e - 2; i--) {
-        newList[i].isFull = false;
-      }
-      return newList;
-    });
-    setCapacity(e - 1);
-  };
-
-  // 点击按钮重置小水杯
-  const reset = () => {
-    setList(() => {
-      let newList = data;
-      return newList;
-    });
-    setCapacity(0);
-  };
   return (
     <div className="water">
       <h1>提醒喝水器</h1>
@@ -62,13 +35,19 @@ const Home = () => {
       </div>
       <p className="text">选择你喝了几杯水</p>
       <div className="cups">
-        {list.map((item) => {
+        {cup.map((item) => {
           return (
             <div
               onClick={
                 item.isFull
-                  ? (e) => emptyCup(e.target.id)
-                  : (e) => fullCup(e.target.id)
+                  ? (e) => {
+                      dispatch(emptyCup(e.target.id));
+                      dispatch(decrementPercent(e.target.id));
+                    }
+                  : (e) => {
+                      dispatch(fullCup(e.target.id));
+                      dispatch(setPercent(e.target.id));
+                    }
               }
               className={item.isFull ? "cup cup-small full" : "cup cup-small"}
               id={item.id}
@@ -79,7 +58,13 @@ const Home = () => {
           );
         })}
       </div>
-      <button className="reset" onClick={reset}>
+      <button
+        className="reset"
+        onClick={() => {
+          dispatch(reset());
+          dispatch(resetPercent());
+        }}
+      >
         重置
       </button>
     </div>
