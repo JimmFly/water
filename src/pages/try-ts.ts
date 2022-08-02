@@ -8,3 +8,4 @@ function example(x:string | number , y: string | boolean) {
     console.log(y);
   }
 }
+example("yjf","YJF")
