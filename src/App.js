@@ -7,6 +7,7 @@ import Circle from "./pages/Circle";
 import Canvas from "./pages/Canvas";
 import Backga from "./pages/backga";
 import Try from "./pages/tryJotai";
+import Slate from "./pages/TrySlate";
 import { Provider } from "jotai";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Provider>
         <Try />
       </Provider>
+      <Slate />
     </div>
   );
 }
