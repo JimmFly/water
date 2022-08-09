@@ -12,6 +12,18 @@ const initialValue = [
     children: [{ text: "A line of text in a paragraph." }],
   },
 ];
+// Define a React component renderer for our code blocks.
+const CodeElement = (props) => {
+  return (
+    <pre {...props.attributes}>
+      <code>{props.children}</code>
+    </pre>
+  );
+};
+
+const DefaultElement = (props) => {
+  return <p {...props.attributes}>{props.children}</p>;
+};
 
 const TrySlate = () => {
   const [editor] = useState(() => withReact(createEditor()));
@@ -19,7 +31,14 @@ const TrySlate = () => {
   return (
     <div className="trySlate">
       <Slate editor={editor} value={initialValue}>
-        <Editable />
+        <Editable
+          onKeyDown={(e) => {
+            if (e.key === "&") {
+              e.preventDefault();
+              editor.insertText("and");
+            }
+          }}
+        />
       </Slate>
     </div>
   );
