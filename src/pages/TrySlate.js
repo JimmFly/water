@@ -6,6 +6,42 @@ import { createEditor, Editor, Transforms, Text } from "slate";
 // Import the Slate components and React plugin.
 import { Slate, Editable, withReact } from "slate-react";
 
+// Define our own custom set of helpers.
+const CustomEditor = {
+  isBoldMarActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.bold === true,
+      universal: true,
+    });
+    return !!match;
+  },
+
+  isCodeBlockActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "code",
+    });
+    return !!match;
+  },
+
+  toggleBoldMark(editor) {
+    const isActive = CustomEditor.isBoldMarActive(editor);
+    Transforms.setNodes(
+      editor,
+      { bold: isActive ? null : true },
+      { match: (n) => Text.isText(n), split: true }
+    );
+  },
+
+  toggleCodeBlock(editor) {
+    const isActive = CustomEditor.isCodeBlockActive(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "code" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+};
+
 const initialValue = [
   {
     type: "paragraph",
@@ -58,51 +94,56 @@ const TrySlate = () => {
   return (
     <div className="trySlate">
       <Slate editor={editor} value={initialValue}>
-        <Editable
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          onKeyDown={(e) => {
-            if (e.key === "&") {
+        <div>
+          <button
+            onMouseDown={(e) => {
               e.preventDefault();
-              editor.insertText("and");
-            }
-            if (!e.ctrlKey) {
-              return;
-            }
+              CustomEditor.toggleBoldMark(editor);
+            }}
+          >
+            Bold
+          </button>
 
-            switch (e.key) {
-              // When "`" is pressed, keep our existing code block logic.
-              case "`":
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              CustomEditor.toggleCodeBlock(editor);
+            }}
+          >
+            Code Block
+          </button>
+        </div>
+        <div>
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={(e) => {
+              if (e.key === "&") {
                 e.preventDefault();
-                const [match] = Editor.nodes(editor, {
-                  match: (n) => n.type === "code",
-                });
-                Transforms.setNodes(
-                  editor,
-                  { type: match ? null : "code" },
-                  { match: (n) => Editor.isBlock(editor, n) }
-                );
-                break;
-              // When "B" is pressed, bold the text in the selection.
-              case "b": {
-                e.preventDefault();
-                const [match] = Editor.nodes(editor, {
-                  match: (n) => n.bold === "bold",
-                });
-                Transforms.setNodes(
-                  editor,
-                  { bold: match ? null : "bold" },
-                  // Apply it to text nodes, and split the text node up if the
-                  // selection is overlapping only part of it.
-                  { match: (n) => Text.isText(n), split: true }
-                );
-                break;
+                editor.insertText("and");
               }
-              default:
-                break;
-            }
-          }}
-        />
+              if (!e.ctrlKey) {
+                return;
+              }
+
+              switch (e.key) {
+                // When "`" is pressed, keep our existing code block logic.
+                case "`":
+                  e.preventDefault();
+                  CustomEditor.toggleCodeBlock(editor);
+                  break;
+                // When "B" is pressed, bold the text in the selection.
+                case "b": {
+                  e.preventDefault();
+                  CustomEditor.toggleBoldMark(editor);
+                  break;
+                }
+                default:
+                  break;
+              }
+            }}
+          />
+        </div>
       </Slate>
     </div>
   );
