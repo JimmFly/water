@@ -97,6 +97,8 @@ const Leaf = (props) => {
     <span
       {...props.attributes}
       style={{
+        backgroundColor:
+          props.children.props.parent.type === "code" ? "#eee" : "white",
         fontWeight: props.leaf.bold ? "bold" : "normal",
         fontStyle: props.leaf.italic ? "italic" : "normal",
         textDecoration: props.leaf.underline ? "underline" : "normal",
