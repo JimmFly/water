@@ -1,0 +1,29 @@
+.trySlate {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(192, 189, 189);
+  padding: 2rem;
+
+  .slateEditor {
+    position: relative;
+    padding: 1px 18px 17px;
+    margin: 0 -20px;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px;
+    background-color: #eee;
+
+    .slateButton {
+      display: flex;
+      justify-content: center;
+      width: 50vw;
+      font-size: 18px;
+      vertical-align: text-bottom;
+      border-bottom: 1px solid black;
+    }
+    .slateEditor {
+      border: 1px black solid;
+    }
+  }
+}

@@ -29,6 +29,13 @@ const CustomEditor = {
     });
     return !!match;
   },
+  isUnderlineMarkActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.underline === true,
+      universal: true,
+    });
+    return !!match;
+  },
 
   toggleBoldMark(editor) {
     const isActive = CustomEditor.isBoldMarkActive(editor);
@@ -53,6 +60,14 @@ const CustomEditor = {
     Transforms.setNodes(
       editor,
       { italic: isActive ? null : true },
+      { match: (n) => Text.isText(n), split: true }
+    );
+  },
+  toggleUnderlineMark(editor) {
+    const isActive = CustomEditor.isUnderlineMarkActive(editor);
+    Transforms.setNodes(
+      editor,
+      { underline: isActive ? null : true },
       { match: (n) => Text.isText(n), split: true }
     );
   },
@@ -84,6 +99,7 @@ const Leaf = (props) => {
       style={{
         fontWeight: props.leaf.bold ? "bold" : "normal",
         fontStyle: props.leaf.italic ? "italic" : "normal",
+        textDecoration: props.leaf.underline ? "underline" : "normal",
       }}
     >
       {props.children}
@@ -112,67 +128,79 @@ const TrySlate = () => {
 
   return (
     <div className="trySlate">
-      <Slate editor={editor} value={initialValue}>
-        <div>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              CustomEditor.toggleBoldMark(editor);
-            }}
-          >
-            Bold
-          </button>
-
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              CustomEditor.toggleCodeBlock(editor);
-            }}
-          >
-            Code Block
-          </button>
-
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              CustomEditor.toggleItalicMark(editor);
-            }}
-          >
-            Italic
-          </button>
-        </div>
-        <div>
-          <Editable
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            onKeyDown={(e) => {
-              if (e.key === "&") {
+      <div className="slateEditor">
+        <Slate editor={editor} value={initialValue}>
+          <div className="slateButton">
+            <button
+              onMouseDown={(e) => {
                 e.preventDefault();
-                editor.insertText("and");
-              }
-              if (!e.ctrlKey) {
-                return;
-              }
+                CustomEditor.toggleBoldMark(editor);
+              }}
+            >
+              Bold
+            </button>
 
-              switch (e.key) {
-                // When "`" is pressed, keep our existing code block logic.
-                case "`":
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleCodeBlock(editor);
+              }}
+            >
+              Code Block
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleItalicMark(editor);
+              }}
+            >
+              Italic
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleUnderlineMark(editor);
+              }}
+            >
+              underline
+            </button>
+          </div>
+          <div className="textArea">
+            <Editable
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              onKeyDown={(e) => {
+                if (e.key === "&") {
                   e.preventDefault();
-                  CustomEditor.toggleCodeBlock(editor);
-                  break;
-                // When "B" is pressed, bold the text in the selection.
-                case "b": {
-                  e.preventDefault();
-                  CustomEditor.toggleBoldMark(editor);
-                  break;
+                  editor.insertText("and");
                 }
-                default:
-                  break;
-              }
-            }}
-          />
-        </div>
-      </Slate>
+                if (!e.ctrlKey) {
+                  return;
+                }
+
+                switch (e.key) {
+                  // When "`" is pressed, keep our existing code block logic.
+                  case "`":
+                    e.preventDefault();
+                    CustomEditor.toggleCodeBlock(editor);
+                    break;
+                  // When "B" is pressed, bold the text in the selection.
+                  case "B":
+                  case "b":
+                    e.preventDefault();
+                    CustomEditor.toggleBoldMark(editor);
+                    break;
+
+                  default:
+                    break;
+                }
+              }}
+            />
+          </div>
+        </Slate>
+      </div>
     </div>
   );
 };
