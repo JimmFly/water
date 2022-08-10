@@ -8,7 +8,7 @@ import { Slate, Editable, withReact } from "slate-react";
 
 // Define our own custom set of helpers.
 const CustomEditor = {
-  isBoldMarActive(editor) {
+  isBoldMarkActive(editor) {
     const [match] = Editor.nodes(editor, {
       match: (n) => n.bold === true,
       universal: true,
@@ -22,9 +22,16 @@ const CustomEditor = {
     });
     return !!match;
   },
+  isItalicMarkActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.italic === true,
+      universal: true,
+    });
+    return !!match;
+  },
 
   toggleBoldMark(editor) {
-    const isActive = CustomEditor.isBoldMarActive(editor);
+    const isActive = CustomEditor.isBoldMarkActive(editor);
     Transforms.setNodes(
       editor,
       { bold: isActive ? null : true },
@@ -38,6 +45,15 @@ const CustomEditor = {
       editor,
       { type: isActive ? null : "code" },
       { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+
+  toggleItalicMark(editor) {
+    const isActive = CustomEditor.isItalicMarkActive(editor);
+    Transforms.setNodes(
+      editor,
+      { italic: isActive ? null : true },
+      { match: (n) => Text.isText(n), split: true }
     );
   },
 };
@@ -65,7 +81,10 @@ const Leaf = (props) => {
   return (
     <span
       {...props.attributes}
-      style={{ fontWeight: props.leaf.bold ? "bold" : "normal" }}
+      style={{
+        fontWeight: props.leaf.bold ? "bold" : "normal",
+        fontStyle: props.leaf.italic ? "italic" : "normal",
+      }}
     >
       {props.children}
     </span>
@@ -111,6 +130,15 @@ const TrySlate = () => {
             }}
           >
             Code Block
+          </button>
+
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault();
+              CustomEditor.toggleItalicMark(editor);
+            }}
+          >
+            Italic
           </button>
         </div>
         <div>
