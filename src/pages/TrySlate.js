@@ -36,6 +36,42 @@ const CustomEditor = {
     });
     return !!match;
   },
+  isH1Active(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "heading-one",
+    });
+    return !!match;
+  },
+  isH2Active(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "heading-two",
+    });
+    return !!match;
+  },
+  isListItemActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "list-item",
+    });
+    return !!match;
+  },
+  isNumberedListActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "numbered-list",
+    });
+    return !!match;
+  },
+  isBlockquoteActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "block-quote",
+    });
+    return !!match;
+  },
+  isBulletedListActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => n.type === "bulleted-list",
+    });
+    return !!match;
+  },
 
   toggleBoldMark(editor) {
     const isActive = CustomEditor.isBoldMarkActive(editor);
@@ -71,6 +107,54 @@ const CustomEditor = {
       { match: (n) => Text.isText(n), split: true }
     );
   },
+  toggleH1Block(editor) {
+    const isActive = CustomEditor.isH1Active(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "heading-one" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+  toggleH2Block(editor) {
+    const isActive = CustomEditor.isH2Active(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "heading-two" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+  toggleListItemBlock(editor) {
+    const isActive = CustomEditor.isListItemActive(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "list-item" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+  toggleNumberedListBlock(editor) {
+    const isActive = CustomEditor.isNumberedListActive(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "numbered-list" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+  toggleBlockquoteBlock(editor) {
+    const isActive = CustomEditor.isBlockquoteActive(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "block-quote" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
+  toggleBulletedListBlock(editor) {
+    const isActive = CustomEditor.isBulletedListActive(editor);
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : "bulleted-list" },
+      { match: (n) => Editor.isBlock(editor, n) }
+    );
+  },
 };
 
 const initialValue = [
@@ -90,6 +174,24 @@ const CodeElement = (props) => {
 
 const DefaultElement = (props) => {
   return <p {...props.attributes}>{props.children}</p>;
+};
+const H1Element = (props) => {
+  return <h1 {...props.attributes}>{props.children}</h1>;
+};
+const H2Element = (props) => {
+  return <h2 {...props.attributes}>{props.children}</h2>;
+};
+const ListItemElement = (props) => {
+  return <li {...props.attributes}>{props.children}</li>;
+};
+const NumberedListElement = (props) => {
+  return <ol {...props.attributes}>{props.children}</ol>;
+};
+const BlockElement = (props) => {
+  return <blockquote {...props.attributes}>{props.children}</blockquote>;
+};
+const BulletedListElement = (props) => {
+  return <ul {...props.attributes}>{props.children}</ul>;
 };
 
 const Leaf = (props) => {
@@ -118,6 +220,18 @@ const TrySlate = () => {
     switch (props.element.type) {
       case "code":
         return <CodeElement {...props} />;
+      case "heading-one":
+        return <H1Element {...props} />;
+      case "heading-two":
+        return <H2Element {...props} />;
+      case "list-item":
+        return <ListItemElement {...props} />;
+      case "numbered-list":
+        return <NumberedListElement {...props} />;
+      case "block-quote":
+        return <BlockElement {...props} />;
+      case "bulleted-list":
+        return <BulletedListElement {...props} />;
       default:
         return <DefaultElement {...props} />;
     }
@@ -167,6 +281,60 @@ const TrySlate = () => {
               }}
             >
               underline
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleH1Block(editor);
+              }}
+            >
+              H1
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleH2Block(editor);
+              }}
+            >
+              H2
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleListItemBlock(editor);
+              }}
+            >
+              ListItem
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleNumberedListBlock(editor);
+              }}
+            >
+              NumberedList
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleBlockquoteBlock(editor);
+              }}
+            >
+              Blockquote
+            </button>
+
+            <button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                CustomEditor.toggleBulletedListBlock(editor);
+              }}
+            >
+              BulletedList
             </button>
           </div>
           <div className="textArea">
