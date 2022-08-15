@@ -362,6 +362,11 @@ const TrySlate = () => {
                     e.preventDefault();
                     CustomEditor.toggleBoldMark(editor);
                     break;
+                  case "I":
+                  case "i":
+                    e.preventDefault();
+                    CustomEditor.toggleItalicMark(editor);
+                    break;
 
                   default:
                     break;
